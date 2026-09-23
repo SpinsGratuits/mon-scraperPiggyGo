@@ -1,12 +1,35 @@
 [
-
+    {
+        "date_scraping": "23/09/2026 à 15:23",
+        "date": "23/09/2026",
+        "heure": "15:23",
+        "recompense": "Jetons gratuit",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=LJZMQ3HG&channel=4",
+        "badge": "NEW"
+    },
+    {
+        "date_scraping": "23/09/2026 à 15:23",
+        "date": "23/09/2026",
+        "heure": "15:23",
+        "recompense": "Jetons gratuit",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=LJZMQ3HG&channel=1",
+        "badge": "NEW"
+    },
+    {
+        "date_scraping": "23/09/2026 à 15:23",
+        "date": "23/09/2026",
+        "heure": "15:23",
+        "recompense": "Jetons gratuit",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=F9K02TGT&channel=4",
+        "badge": "NEW"
+    },
     {
         "date_scraping": "23/09/2026 à 15:21",
         "date": "23/09/2026",
         "heure": "15:21",
         "recompense": "Jetons gratuit",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=F9K02TGT&channel=1",
-        "badge": "NEW"
+        "badge": ""
     },
     {
         "date_scraping": "23/09/2026 à 15:21",
@@ -14,7 +37,7 @@
         "heure": "15:21",
         "recompense": "Jetons gratuit",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=ENKOGZ5D&channel=4",
-        "badge": "NEW"
+        "badge": ""
     },
     {
         "date_scraping": "23/09/2026 à 15:21",
@@ -22,7 +45,7 @@
         "heure": "15:21",
         "recompense": "Jetons gratuit",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=ENKOGZ5D&channel=1",
-        "badge": "NEW"
+        "badge": ""
     },
     {
         "date_scraping": "23/09/2026 à 15:21",
@@ -30,7 +53,7 @@
         "heure": "15:21",
         "recompense": "Jetons gratuit",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=50S9F56E&channel=1",
-        "badge": "NEW"
+        "badge": ""
     },
     {
         "date_scraping": "23/09/2026 à 15:21",
@@ -38,7 +61,7 @@
         "heure": "15:21",
         "recompense": "Jetons gratuit",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=VBDKZIJ2&channel=4",
-        "badge": "NEW"
+        "badge": ""
     },
     {
         "date_scraping": "23/09/2026 à 15:21",
@@ -46,7 +69,7 @@
         "heure": "15:21",
         "recompense": "Jetons gratuit",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=VBDKZIJ2&channel=1",
-        "badge": "NEW"
+        "badge": ""
     },
     {
         "date_scraping": "23/09/2026 à 15:21",
@@ -54,7 +77,7 @@
         "heure": "15:21",
         "recompense": "Jetons gratuit",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=RUJ7BCB9&channel=4",
-        "badge": "NEW"
+        "badge": ""
     },
     {
         "date_scraping": "23/09/2026 à 15:21",
@@ -62,6 +85,6 @@
         "heure": "15:21",
         "recompense": "Jetons gratuit",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=RUJ7BCB9&channel=1",
-        "badge": "NEW"
+        "badge": ""
     }
 ]
