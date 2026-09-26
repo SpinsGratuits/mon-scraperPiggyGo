@@ -6,7 +6,7 @@ import cloudscraper
 from bs4 import BeautifulSoup
 
 # 1. URL du site cible et nom de votre fichier JSON
-url = "https://www.topactualites.com/piggy-go-des-et-pieces-gratuits-liens-quotidiens/"
+url = "https://giveaway48.com/piggy-go-reward-links/"
 filename = "scrappiggygo.json"
 
 # --- CHARGEMENT DE L'HISTORIQUE PRÉCÉDENT ---
