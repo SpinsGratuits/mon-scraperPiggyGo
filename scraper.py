@@ -1,16 +1,20 @@
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import cloudscraper
 from bs4 import BeautifulSoup
 
 # --- 1. CONFIGURATION ---
-# Changement de la source pour Mosttechs
 url = "https://mosttechs.com/piggy-go-free-dice-links/"
 filename = "scrappiggygo.json"
 
-# --- 2. CHARGEMENT DE L'HISTORIQUE PRÉCÉDENT ---
+# --- 2. CHARGEMENT ET NETTOYAGE DE L'HISTORIQUE ---
 anciens_liens = {}
+now = datetime.now()
+
+# Seuil d'expiration modifié à 6 jours (144 heures)
+limite_validite = now - timedelta(days=6)
+
 if os.path.exists(filename):
     try:
         with open(filename, mode="r", encoding="utf-8") as json_file:
@@ -18,11 +22,25 @@ if os.path.exists(filename):
             if isinstance(data_chargee, list):
                 for item in data_chargee:
                     if "lienurl" in item:
+                        # Nettoyage automatique : on ignore les liens de plus de 6 jours
+                        try:
+                            date_scrap = datetime.strptime(item.get("date_scraping", ""), "%d/%m/%Y @ %H:%M")
+                            if date_scrap < limite_validite:
+                                continue  # Trop vieux (plus de 6 jours), on supprime
+                        except:
+                            pass
+                        
                         anciens_liens[item["lienurl"]] = item
+        print(f"[Info] {len(anciens_liens)} anciens liens valides (de moins de 6 jours) conservés.")
     except Exception as e:
         print(f"[Attention] Impossible de lire l'historique JSON : {e}")
 
-# Client simulant un navigateur standard (contourne les protections Cloudflare de Mosttechs)
+# Variables temporelles pour les nouveaux liens détectés
+date_now_str = now.strftime("%d/%m/%Y @ %H:%M")
+date_du_jour_str = now.strftime("%d/%m/%Y")
+heure_actuelle_str = now.strftime("%H:%M")
+
+# Client anti-bot pour contourner Cloudflare
 scraper = cloudscraper.create_scraper(browser={'browser': 'chrome', 'platform': 'windows', 'mobile': False})
 
 try:
@@ -32,51 +50,40 @@ try:
 except Exception as e:
     status_code = 500
     html_text = ""
-    print(f"[Erreur] Connexion au site impossible : {e}")
+    print(f"[Erreur] Connexion impossible : {e}")
 
 if status_code == 200:
     soup = BeautifulSoup(html_text, "html.parser")
-    
-    # Variables temporelles pour les nouveaux liens détectés
-    now = datetime.now()
-    date_now_str = now.strftime("%d/%m/%Y @ %H:%M")
-    date_du_jour_str = now.strftime("%d/%m/%Y")
-    heure_actuelle_str = now.strftime("%H:%M")
-    
     tous_les_liens_trouves = []
     
-    # 3. EXTRACTION ET FILTRAGE CHIRURGICAL DES LIENS
+    # 3. EXTRACTION ET FILTRAGE DES LIENS SORTANTS
     all_links = soup.find_all("a", href=True)
     
     for link in all_links:
         href = link["href"].strip()
         
-        # RÈGLE A : Supprimer les liens de navigation interne (ex: /s/...) ou les redirections Telegram
+        # Filtres de sécurité (Telegram, réseaux sociaux, liens relatifs)
         if href.startswith("/") or "t.me" in href.lower() or "telegram.me" in href.lower():
             continue
-            
-        # RÈGLE B : Supprimer les boutons de partage social du site (Twitter, Facebook, Pinterest...)
         if any(p in href.lower() for p in ["twitter.com", "facebook.com", "whatsapp", "pinterest", "reddit.com"]):
             continue
             
-        # RÈGLE C : Isoler uniquement les vrais domaines cadeaux de Piggy Go et raccourcisseurs
-        # (L'éditeur utilise f99.pro, forevernine, ou des réducteurs de liens courts de redirection)
+        # Isoler uniquement les liens officiels de récompenses Piggy Go
         keywords = ["f99", "forevernine", "piggygo", "piggy-go", "t.co", "bit.ly"]
         if any(key in href.lower() for key in keywords):
             tous_les_liens_trouves.append(href)
 
-    # Suppression des doublons stricts au sein de cette session de crawl
+    # Dédoublonnage de la session courante
     tous_les_liens_trouves = list(set(tous_les_liens_trouves))
-    print(f"[Succès] {len(tous_les_liens_trouves)} vrais liens cadeaux isolés depuis Mosttechs.")
 
-    # --- 4. STRUCTURATION DU JSON FLUTTERFLOW ---
+    # --- 4. STRUCTURATION DU RESTE DE LA LISTE ---
     json_data = []
     
     for href in tous_les_liens_trouves:
         type_recompense = "Dés et Pièces"
         
         if href in anciens_liens:
-            # Lien connu : on garde ses données temporelles d'origine pour éviter les sauts de date
+            # Lien existant : on conserve ses données d'époque (pour ne pas casser le tri)
             json_data.append({
                 "date_scraping": anciens_liens[href].get("date_scraping", date_now_str), 
                 "date": anciens_liens[href].get("date", date_du_jour_str), 
@@ -86,7 +93,7 @@ if status_code == 200:
                 "badge": "" 
             })
         else:
-            # Nouveau lien fraîchement publié sur le site
+            # Nouveau lien : on lui applique la date de cette exécution
             json_data.append({
                 "date_scraping": date_now_str, 
                 "date": date_du_jour_str, 
@@ -96,16 +103,25 @@ if status_code == 200:
                 "badge": "NEW" 
             })
 
-    # File-safe : Si le site renvoie 0 liens par erreur, on préserve l'ancienne base pour l'application
+    # Si le site est inaccessible ou ne renvoie rien, on sauvegarde au moins l'historique nettoyé
     if not json_data and anciens_liens:
-        print("[Alerte] Aucun lien trouvé lors du crawl, préservation de l'historique existant.")
         json_data = list(anciens_liens.values())
 
-    # --- 5. ENREGISTREMENT ---
+    # --- 5. TRI CHRONOLOGIQUE STRICT (Le dernier paru en haut de la liste) ---
+    def extraire_date_tri(item):
+        try:
+            return datetime.strptime(item.get("date_scraping", ""), "%d/%m/%Y @ %H:%M")
+        except:
+            return datetime.min
+
+    # Tri décroissant basé sur la date de découverte
+    json_data.sort(key=extraire_date_tri, reverse=True)
+
+    # --- 6. SAUVEGARDE ET ENREGISTREMENT ---
     with open(filename, mode="w", encoding="utf-8") as json_file:
         json.dump(json_data, json_file, indent=4, ensure_ascii=False)
         
-    print(f"[Terminé] Le fichier {filename} a été mis à jour avec succès ({len(json_data)} éléments).")
+    print(f"[Terminé] Fichier mis à jour. Nombre de liens optimisés : {len(json_data)} (Historique de 6 jours maximum, classé du plus récent au plus ancien).")
             
 else:
-    print(f"[Erreur] Échec d'accès réseau (Code {status_code}). Mosttechs bloque peut-être la requête.")
+    print(f"[Erreur] Échec réseau (Code {status_code}).")
