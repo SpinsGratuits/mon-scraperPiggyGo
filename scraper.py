@@ -1,5 +1,6 @@
 import json
 import os
+import re  # <-- L'import manquant a été ajouté ici
 from datetime import datetime, timedelta
 import cloudscraper
 from bs4 import BeautifulSoup
@@ -64,8 +65,7 @@ if status_code == 200:
     for element in entry_content.find_all(["p", "ul", "ol", "strong"]):
         text = element.get_text().strip().lower()
         
-        # Détection d'une ligne de date (Ex: "26 september 2026" ou "**26 september 2026**")
-        # Recherche un pattern : (un ou deux chiffres) (un nom de mois anglais) (quatre chiffres pour l'année)
+        # Détection d'une ligne de date (Ex: "26 september 2026")
         match_date = re.search(r'(\d{1,2})\s+([a-z]+)\s+(\d{4})', text)
         if match_date:
             jour = match_date.group(1).zfill(2)
@@ -132,7 +132,7 @@ if status_code == 200:
     if not json_data and anciens_liens:
         json_data = list(anciens_liens.values())
 
-    # --- 4. TRi ALGORITHMIQUE PAR LA DATE DE PARUTION DU SITE (Du plus récent au plus ancien) ---
+    # --- 4. TRI ALGORITHMIQUE PAR LA DATE DE PARUTION DU SITE (Du plus récent au plus ancien) ---
     def extraire_cle_parution(item):
         try:
             # Trie d'abord par la date du jour du calendrier (Ex: 26/09/2026), puis par l'heure de découverte
