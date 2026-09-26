@@ -1,6 +1,6 @@
 import json
 import os
-import re  # <-- L'import manquant a été ajouté ici
+import re
 from datetime import datetime, timedelta
 import cloudscraper
 from bs4 import BeautifulSoup
@@ -106,12 +106,16 @@ if status_code == 200:
                 
                 type_recompense = "Dés et Pièces"
                 
+                # Construction de la nouvelle donnée combinée (Date Parution + Heure du Scraping)
+                date_scraping1_combinee = f"{current_date_str} @ {heure_actuelle_str}"
+                
                 # --- STRATÉGIE DE RECONSTITUTION ---
                 if href in anciens_liens:
-                    # Lien existant : On garde son historique mais on met à jour sa vraie date de parution si trouvée
+                    # Lien existant : On garde son historique mais on met à jour la parution et date_scraping1
                     json_data.append({
                         "date_scraping": anciens_liens[href].get("date_scraping", date_now_str), 
-                        "date": current_date_str,  # Remplacée par la vraie date lue sur le site
+                        "date_scraping1": anciens_liens[href].get("date_scraping1", date_scraping1_combinee),
+                        "date": current_date_str,  
                         "heure": anciens_liens[href].get("heure", "00:00"),
                         "recompense": anciens_liens[href].get("recompense", type_recompense), 
                         "lienurl": href,
@@ -121,7 +125,8 @@ if status_code == 200:
                     # Nouveau lien paru sur le site
                     json_data.append({
                         "date_scraping": date_now_str, 
-                        "date": current_date_str,  # Date exacte écrite sur Mosttechs juste au-dessus
+                        "date_scraping1": date_scraping1_combinee,
+                        "date": current_date_str,  
                         "heure": heure_actuelle_str,
                         "recompense": type_recompense, 
                         "lienurl": href,
@@ -135,20 +140,19 @@ if status_code == 200:
     # --- 4. TRI ALGORITHMIQUE PAR LA DATE DE PARUTION DU SITE (Du plus récent au plus ancien) ---
     def extraire_cle_parution(item):
         try:
-            # Trie d'abord par la date du jour du calendrier (Ex: 26/09/2026), puis par l'heure de découverte
             date_part = datetime.strptime(item.get("date", ""), "%d/%m/%Y")
             return date_part.timestamp()
         except:
             return 0
 
-    # Tri descendant (reverse=True) : Les dates de parutions les plus récentes se retrouvent en haut (index 0)
+    # Tri descendant : Les dates de parutions les plus récentes se retrouvent en haut (index 0)
     json_data.sort(key=extraire_cle_parution, reverse=True)
 
     # --- 5. SAUVEGARDE DU FICHIER JSON ---
     with open(filename, mode="w", encoding="utf-8") as json_file:
         json.dump(json_data, json_file, indent=4, ensure_ascii=False)
         
-    print(f"[Terminé] Fichier mis à jour avec succès : {len(json_data)} liens classés chronologiquement selon le site Mosttechs.")
+    print(f"[Terminé] Fichier mis à jour avec succès : {len(json_data)} liens classés chronologiquement. Donnée 'date_scraping1' intégrée.")
             
 else:
     print(f"[Erreur] Échec d'accès réseau (Code {status_code}).")
