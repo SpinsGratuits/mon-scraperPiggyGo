@@ -7,8 +7,8 @@ from bs4 import BeautifulSoup
 # --- CONFIGURATION ---
 filename = "scrappiggygo.json"
 sources = [
-    "https://giveaway48.com/piggy-go-reward-links/",  # Source 1 : Corrigée sans le double 'h'
-    "https://t.me/s/PiggyGoFreeRewards"               # Source 2 : Telegram Web public
+    "https://giveaway48.com/piggy-go-reward-links/",
+    "https://t.me/s/PiggyGoFreeRewards"
 ]
 
 # --- CHARGEMENT DE L'HISTORIQUE ---
@@ -24,7 +24,6 @@ if os.path.exists(filename):
     except Exception as e:
         print(f"Impossible de lire l'historique : {e}")
 
-# Client simulant un navigateur standard
 scraper = cloudscraper.create_scraper(browser={'browser': 'chrome', 'platform': 'windows', 'mobile': False})
 
 now = datetime.now()
@@ -41,38 +40,38 @@ for url in sources:
         response = scraper.get(url, timeout=15)
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, "html.parser")
-            
-            # Extraction de TOUS les liens HTML de la page
             links = soup.find_all("a", href=True)
             
             for link in links:
-                href = link["href"]
+                href = link["href"].strip()
                 
-                # FILTRE LARGE : On attrape les liens officiels de l'éditeur ou les redirections cadeaux
-                # Valide les liens contenant f99, forevernine, piggygo ou les redirections externes de Giveaway
-                if any(k in href.lower() for k in ["f99", "forevernine", "piggygo", "piggy-go"]):
-                    # Éviter d'attraper les liens de partage vers Twitter/Facebook du site lui-même
-                    if any(p in href.lower() for p in ["twitter.com", "facebook.com", "whatsapp"]):
-                        continue
-                        
+                # 1. SÉCURITÉ ABSOLUE : On rejette les liens internes Telegram et les liens relatifs du type /s/...
+                if href.startswith("/") or "t.me" in href.lower() or "telegram.me" in href.lower():
+                    continue
+                
+                # 2. SÉCURITÉ DES RÉSEAUX : On supprime les boutons de partage social
+                if any(p in href.lower() for p in ["twitter.com", "facebook.com", "whatsapp", "pinterest"]):
+                    continue
+                
+                # 3. FILTRE DES VRAIS LIENS CADEAUX : Doit être un lien complet externe
+                # Les éditeurs de Piggy Go utilisent principalement f99.pro, forevernine ou des raccourcis comme t.co / bit.ly
+                if any(k in href.lower() for k in ["f99", "forevernine", "piggygo", "piggy-go", "t.co", "bit.ly"]):
                     tous_les_liens_trouves.append(href)
-        else:
-            print(f"-> Code d'erreur réseau : {response.status_code}")
+                    
     except Exception as e:
         print(f"-> Erreur sur cette source : {e}")
 
-# Suppression des doublons de la session courante
+# Suppression des doublons de session
 tous_les_liens_trouves = list(set(tous_les_liens_trouves))
-print(f"\nNombre total de liens uniques collectés : {len(tous_les_liens_trouves)}")
+print(f"Nombre de vrais liens valides trouvés (hors Telegram) : {len(tous_les_liens_trouves)}")
 
-# --- PRÉPARATION DU JSON FLUTTERFLOW ---
+# --- CONSTITUTION DU JSON POUR FLUTTERFLOW ---
 json_data = []
 
 for href in tous_les_liens_trouves:
     type_recompense = "Dés et Pièces"
     
     if href in anciens_liens:
-        # Conserver l'ancien historique temporel exact pour vos utilisateurs
         json_data.append({
             "date_scraping": anciens_liens[href].get("date_scraping", date_now_str), 
             "date": anciens_liens[href].get("date", date_du_jour_str), 
@@ -82,7 +81,6 @@ for href in tous_les_liens_trouves:
             "badge": "" 
         })
     else:
-        # Nouveau lien détecté
         json_data.append({
             "date_scraping": date_now_str, 
             "date": date_du_jour_str, 
@@ -92,19 +90,10 @@ for href in tous_les_liens_trouves:
             "badge": "NEW" 
         })
 
-# --- SAUVEGARDE ET SÉCURITÉ ---
-if not json_data:
-    if anciens_liens:
-        print("Aucun lien détecté sur le web, conservation de vos anciens liens actuels.")
-        json_data = list(anciens_liens.values())
-    else:
-        json_data.append({
-            "date_scraping": date_now_str,
-            "statut": "VIDE",
-            "message": "Aucun lien extrait des sources distantes."
-        })
+if not json_data and anciens_liens:
+    json_data = list(anciens_liens.values())
 
 with open(filename, mode="w", encoding="utf-8") as json_file:
     json.dump(json_data, json_file, indent=4, ensure_ascii=False)
 
-print(f"Fichier {filename} mis à jour avec succès ({len(json_data)} éléments).")
+print(f"Fichier réécrit. Tous les liens polluants '/s/' ont été éradiqués.")
