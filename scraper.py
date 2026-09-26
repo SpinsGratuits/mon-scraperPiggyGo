@@ -1,21 +1,17 @@
 import json
 import os
-import re
 from datetime import datetime
 import cloudscraper
+from bs4 import BeautifulSoup
 
-# --- CONFIGURATION DES SOURCES ET FICHIER ---
+# --- CONFIGURATION ---
 filename = "scrappiggygo.json"
 sources = [
-    "https://giveaway48.com/piggy-go-reward-links/", # Source 1 : Blog US mis à jour mondialement
-    "https://t.me"              # Source 2 : Telegram (Version Web publique)
+    "https://giveaway48.com/piggy-go-reward-links/",  # Source 1 : Corrigée sans le double 'h'
+    "https://t.me/s/PiggyGoFreeRewards"               # Source 2 : Telegram Web public
 ]
 
-# Pattern Regex robuste pour attraper toutes les URLs officielles de cadeaux Piggy Go
-# (Filtre les domaines de l'éditeur comme f99.pro, forevernine.com ou piggygo-jy)
-pattern_lien_officiel = r'https://[a-zA-Z0-9-._]+\.(?:forevernine|f99)\.com/[^\s"\']+'
-
-# --- CHARGEMENT DE L'HISTORIQUE DE VOTRE APP ---
+# --- CHARGEMENT DE L'HISTORIQUE ---
 anciens_liens = {}
 if os.path.exists(filename):
     try:
@@ -26,83 +22,89 @@ if os.path.exists(filename):
                     if "lienurl" in item:
                         anciens_liens[item["lienurl"]] = item
     except Exception as e:
-        print(f"Impossible de lire le fichier JSON précédent : {e}")
+        print(f"Impossible de lire l'historique : {e}")
 
-# Création du client simulant un vrai navigateur
+# Client simulant un navigateur standard
 scraper = cloudscraper.create_scraper(browser={'browser': 'chrome', 'platform': 'windows', 'mobile': False})
 
-# Variables temporelles pour les nouveaux éléments
 now = datetime.now()
 date_now_str = now.strftime("%d/%m/%Y @ %H:%M")
 date_du_jour_str = now.strftime("%d/%m/%Y")
 heure_actuelle_str = now.strftime("%H:%M")
 
-# Liste de session pour fusionner sans doublon
 tous_les_liens_trouves = []
 
-# --- DU SCRAPING MULTI-SOURCES ---
+# --- PARCOURS DES SOURCES ---
 for url in sources:
-    print(f"Extraction en cours sur : {url} ...")
+    print(f"Scraping de la source : {url}")
     try:
         response = scraper.get(url, timeout=15)
         if response.status_code == 200:
-            # Extraction directe par Regex dans le code HTML brut aspired
-            liens_source = re.findall(pattern_lien_officiel, response.text)
-            print(f"-> {len(liens_source)} liens potentiels identifiés.")
-            tous_les_liens_trouves.extend(liens_source)
+            soup = BeautifulSoup(response.text, "html.parser")
+            
+            # Extraction de TOUS les liens HTML de la page
+            links = soup.find_all("a", href=True)
+            
+            for link in links:
+                href = link["href"]
+                
+                # FILTRE LARGE : On attrape les liens officiels de l'éditeur ou les redirections cadeaux
+                # Valide les liens contenant f99, forevernine, piggygo ou les redirections externes de Giveaway
+                if any(k in href.lower() for k in ["f99", "forevernine", "piggygo", "piggy-go"]):
+                    # Éviter d'attraper les liens de partage vers Twitter/Facebook du site lui-même
+                    if any(p in href.lower() for p in ["twitter.com", "facebook.com", "whatsapp"]):
+                        continue
+                        
+                    tous_les_liens_trouves.append(href)
         else:
-            print(f"-> Échec d'accès (Code {response.status_code})")
+            print(f"-> Code d'erreur réseau : {response.status_code}")
     except Exception as e:
-        print(f"-> Erreur lors du scraping de cette source : {e}")
+        print(f"-> Erreur sur cette source : {e}")
 
-# Nettoyage des doublons stricts trouvés pendant cette session
+# Suppression des doublons de la session courante
 tous_les_liens_trouves = list(set(tous_les_liens_trouves))
+print(f"\nNombre total de liens uniques collectés : {len(tous_les_liens_trouves)}")
 
-# --- RECONSTITUTION ET STRATÉGIE FLUTTERFLOW ---
+# --- PRÉPARATION DU JSON FLUTTERFLOW ---
 json_data = []
 
 for href in tous_les_liens_trouves:
-    # Éviter un doublon résiduel dans la liste finale
-    if any(item["lienurl"] == href for item in json_data):
-        continue
-        
     type_recompense = "Dés et Pièces"
     
-    # Si le lien existait déjà dans votre fichier JSON
     if href in anciens_liens:
+        # Conserver l'ancien historique temporel exact pour vos utilisateurs
         json_data.append({
             "date_scraping": anciens_liens[href].get("date_scraping", date_now_str), 
             "date": anciens_liens[href].get("date", date_du_jour_str), 
             "heure": anciens_liens[href].get("heure", "00:00"),
             "recompense": anciens_liens[href].get("recompense", type_recompense), 
             "lienurl": href,
-            "badge": "" # Plus de badge pour les anciens liens
+            "badge": "" 
         })
     else:
-        # C'est un tout nouveau lien fraîchement sorti sur le web !
+        # Nouveau lien détecté
         json_data.append({
             "date_scraping": date_now_str, 
             "date": date_du_jour_str, 
             "heure": heure_actuelle_str,
             "recompense": type_recompense, 
             "lienurl": href,
-            "badge": "NEW" # Badge visible pour vos utilisateurs
+            "badge": "NEW" 
         })
 
-# --- ENREGISTREMENT SÉCURISÉ ---
+# --- SAUVEGARDE ET SÉCURITÉ ---
 if not json_data:
-    # Sauvegarde de secours si les deux sites tombent en même temps
     if anciens_liens:
-        print("Aucun lien frais trouvé, conservation de l'historique existant.")
+        print("Aucun lien détecté sur le web, conservation de vos anciens liens actuels.")
         json_data = list(anciens_liens.values())
     else:
         json_data.append({
             "date_scraping": date_now_str,
             "statut": "VIDE",
-            "message": "Aucun lien extrait des deux sources."
+            "message": "Aucun lien extrait des sources distantes."
         })
-
-print(f"\nTraitement terminé : {len(json_data)} liens enregistrés dans {filename}.")
 
 with open(filename, mode="w", encoding="utf-8") as json_file:
     json.dump(json_data, json_file, indent=4, ensure_ascii=False)
+
+print(f"Fichier {filename} mis à jour avec succès ({len(json_data)} éléments).")
