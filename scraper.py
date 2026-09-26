@@ -6,6 +6,7 @@ import cloudscraper
 from bs4 import BeautifulSoup
 
 # --- 1. CONFIGURATION ---
+# URL corrigée pour cibler spécifiquement la page Piggy Go
 url = "https://mosttechs.com/piggy-go-free-dice-links/"
 filename = "scrappiggygo.json"
 
@@ -106,15 +107,12 @@ if status_code == 200:
                 
                 type_recompense = "Dés et Pièces"
                 
-                # Construction de la nouvelle donnée combinée (Date Parution + Heure du Scraping)
-                date_scraping1_combinee = f"{current_date_str} @ {heure_actuelle_str}"
-                
-                # --- STRATÉGIE DE RECONSTITUTION ---
+                # --- STRATÉGIE DE RECONSTITUTION UNIQUE ---
                 if href in anciens_liens:
-                    # Lien existant : On garde son historique mais on met à jour la parution et date_scraping1
+                    # ANCIEN LIEN : On conserve STRICTEMENT l'ancienne valeur historique sans écraser l'heure
                     json_data.append({
                         "date_scraping": anciens_liens[href].get("date_scraping", date_now_str), 
-                        "date_scraping1": anciens_liens[href].get("date_scraping1", date_scraping1_combinee),
+                        "date_scraping1": anciens_liens[href].get("date_scraping1", f"{current_date_str} @ {heure_actuelle_str}"),
                         "date": current_date_str,  
                         "heure": anciens_liens[href].get("heure", "00:00"),
                         "recompense": anciens_liens[href].get("recompense", type_recompense), 
@@ -122,7 +120,8 @@ if status_code == 200:
                         "badge": "" 
                     })
                 else:
-                    # Nouveau lien paru sur le site
+                    # NOUVEAU LIEN : On calcule la date de parution combinée à l'heure courante du premier scraping
+                    date_scraping1_combinee = f"{current_date_str} @ {heure_actuelle_str}"
                     json_data.append({
                         "date_scraping": date_now_str, 
                         "date_scraping1": date_scraping1_combinee,
@@ -152,7 +151,7 @@ if status_code == 200:
     with open(filename, mode="w", encoding="utf-8") as json_file:
         json.dump(json_data, json_file, indent=4, ensure_ascii=False)
         
-    print(f"[Terminé] Fichier mis à jour avec succès : {len(json_data)} liens classés chronologiquement. Donnée 'date_scraping1' intégrée.")
+    print(f"[Terminé] Fichier mis à jour avec succès : {len(json_data)} liens classés chronologiquement. Conservation stricte des anciennes valeurs temporelles.")
             
 else:
     print(f"[Erreur] Échec d'accès réseau (Code {status_code}).")
