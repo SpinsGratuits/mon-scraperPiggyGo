@@ -6,7 +6,7 @@
         "heure": "15:00",
         "recompense": "Dices et Rewards",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=41XHPA6J&channel=1",
-        "badge": "NEW"
+        "badge": ""
     },
     {
         "date_scraping": "03/10/2026 @ 15:00",
@@ -15,7 +15,7 @@
         "heure": "15:00",
         "recompense": "Dices et Rewards",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=41XHPA6J&channel=4",
-        "badge": "NEW"
+        "badge": ""
     },
     {
         "date_scraping": "02/10/2026 @ 12:19",
@@ -123,42 +123,6 @@
         "heure": "12:20",
         "recompense": "Dés et Pièces",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=7H4DJ3R4&channel=1",
-        "badge": ""
-    },
-    {
-        "date_scraping": "28/09/2026 @ 16:18",
-        "date_scraping1": "28/09/2026 @ 16:18",
-        "date": "28/09/2026",
-        "heure": "16:18",
-        "recompense": "Dés et Pièces",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=X5A30KH5&channel=1",
-        "badge": ""
-    },
-    {
-        "date_scraping": "28/09/2026 @ 16:18",
-        "date_scraping1": "28/09/2026 @ 16:18",
-        "date": "28/09/2026",
-        "heure": "16:18",
-        "recompense": "Dés et Pièces",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=X5A30KH5&channel=4",
-        "badge": ""
-    },
-    {
-        "date_scraping": "28/09/2026 @ 16:18",
-        "date_scraping1": "28/09/2026 @ 16:18",
-        "date": "28/09/2026",
-        "heure": "16:18",
-        "recompense": "Dés et Pièces",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=JZZ472YC&channel=1",
-        "badge": ""
-    },
-    {
-        "date_scraping": "28/09/2026 @ 16:18",
-        "date_scraping1": "28/09/2026 @ 16:18",
-        "date": "28/09/2026",
-        "heure": "16:18",
-        "recompense": "Dés et Pièces",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=JZZ472YC&channel=4",
         "badge": ""
     }
 ]
