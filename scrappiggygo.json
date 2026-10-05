@@ -1,11 +1,20 @@
 [
     {
-        "date_scraping": "04/10/2026 @ 05:54",
-        "date_scraping1": "04/10/2026 @ 05:54",
+        "date_scraping": "05/10/2026 @ 00:24",
+        "date_scraping1": "04/10/2026 @ 00:24",
         "date": "04/10/2026",
-        "heure": "05:54",
+        "heure": "00:24",
         "recompense": "Dices et Rewards",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=YU3WJUSK&channel=1",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=MG848TKG&channel=1",
+        "badge": "NEW"
+    },
+    {
+        "date_scraping": "05/10/2026 @ 00:24",
+        "date_scraping1": "04/10/2026 @ 00:24",
+        "date": "04/10/2026",
+        "heure": "00:24",
+        "recompense": "Dices et Rewards",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=MG848TKG&channel=4",
         "badge": "NEW"
     },
     {
@@ -14,8 +23,17 @@
         "date": "04/10/2026",
         "heure": "05:54",
         "recompense": "Dices et Rewards",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=YU3WJUSK&channel=1",
+        "badge": ""
+    },
+    {
+        "date_scraping": "04/10/2026 @ 05:54",
+        "date_scraping1": "04/10/2026 @ 05:54",
+        "date": "04/10/2026",
+        "heure": "05:54",
+        "recompense": "Dices et Rewards",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=YU3WJUSK&channel=4",
-        "badge": "NEW"
+        "badge": ""
     },
     {
         "date_scraping": "03/10/2026 @ 15:00",
@@ -114,33 +132,6 @@
         "heure": "04:17",
         "recompense": "Dés et Pièces",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=V86GN6HR&channel=4",
-        "badge": ""
-    },
-    {
-        "date_scraping": "29/09/2026 @ 12:20",
-        "date_scraping1": "29/09/2026 @ 12:20",
-        "date": "29/09/2026",
-        "heure": "12:20",
-        "recompense": "Dés et Pièces",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=4484YJIW&channel=1",
-        "badge": ""
-    },
-    {
-        "date_scraping": "29/09/2026 @ 12:20",
-        "date_scraping1": "29/09/2026 @ 12:20",
-        "date": "29/09/2026",
-        "heure": "12:20",
-        "recompense": "Dés et Pièces",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=4484YJIW&channel=4",
-        "badge": ""
-    },
-    {
-        "date_scraping": "29/09/2026 @ 12:20",
-        "date_scraping1": "29/09/2026 @ 12:20",
-        "date": "29/09/2026",
-        "heure": "12:20",
-        "recompense": "Dés et Pièces",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=7H4DJ3R4&channel=1",
         "badge": ""
     }
 ]
