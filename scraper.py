@@ -4,9 +4,11 @@ import re
 from datetime import datetime, timedelta
 import cloudscraper
 from bs4 import BeautifulSoup
+import firebase_admin
+from firebase_admin import credentials, firestore
 
 # --- 1. CONFIGURATION ---
-url = "https://mosttechs.com/piggy-go-free-dice-links/"  # URL exemple pour Piggy Go
+url = "https://mosttechs.com/piggy-go-free-dice-links/"
 filename = "scrappiggygo.json"
 
 mois_en_to_num = {
@@ -19,6 +21,19 @@ now = datetime.now()
 date_now_str = now.strftime("%d/%m/%Y @ %H:%M")
 heure_actuelle_str = now.strftime("%H:%M")
 limite_conservation = now - timedelta(days=6)
+
+# --- 1B. INITIALISATION FIREBASE ---
+firebase_key_raw = os.environ.get('FIREBASE_KEY')
+if not firebase_key_raw:
+    raise ValueError("Le secret FIREBASE_KEY est introuvable dans l'environnement.")
+
+# Vérification pour éviter les conflits d'initialisation en multi-script
+if not firebase_admin._apps:
+    cred_json = json.loads(firebase_key_raw)
+    cred = credentials.Certificate(cred_json)
+    firebase_admin.initialize_app(cred)
+
+db = firestore.client()
 
 # --- 2. CHARGEMENT & NETTOYAGE DE L'HISTORIQUE ---
 anciens_liens = {}
@@ -54,6 +69,7 @@ if status_code == 200:
     soup = BeautifulSoup(html_text, "html.parser")
     json_data = []
     liens_visites_session = set()
+    nouveaux_liens_detectes = 0  # Compteur dédié au déclenchement des pushs
     
     entry_content = soup.find(class_="entry-content")
     if not entry_content:
@@ -84,7 +100,6 @@ if status_code == 200:
             if any(p in href.lower() for p in ["twitter.com", "facebook.com", "whatsapp", "pinterest", "reddit.com"]):
                 continue
                 
-            # Mots-clés adaptés (ajustez si Piggy Go utilise d'autres plateformes de récompenses)
             keywords = ["piggygo", "static-mat", "t.co", "bit.ly", "://facebook.com"]
             if any(key in href.lower() for key in keywords):
                 
@@ -108,7 +123,6 @@ if status_code == 200:
                     
                     try:
                         date_premier_scraping = datetime.strptime(date_premier_scraping_str, "%d/%m/%Y @ %H:%M")
-                        # Maintien du badge si découvert depuis moins de 6 heures
                         if now - date_premier_scraping < timedelta(hours=6):
                             badge_actuel = "NEW"
                     except:
@@ -125,6 +139,7 @@ if status_code == 200:
                     })
                 else:
                     # Nouveau lien détecté
+                    nouveaux_liens_detectes += 1
                     date_scraping1_combinee = f"{current_date_str} @ {heure_actuelle_str}"
                     json_data.append({
                         "date_scraping": date_now_str, 
@@ -148,11 +163,40 @@ if status_code == 200:
 
     json_data.sort(key=extraire_cle_parution, reverse=True)
 
-    # --- 5. ENREGISTREMENT ---
+    # --- 5. ENREGISTREMENT LOCAL ---
     with open(filename, mode="w", encoding="utf-8") as json_file:
         json.dump(json_data, json_file, indent=4, ensure_ascii=False)
         
     print(f"[Terminé] Fichier Piggy Go {filename} mis à jour ({len(json_data)} liens valides).")
+
+    # --- 6. EXPORTATION ET ENVOI DIRECT DU PUSH ---
+    if nouveaux_liens_detectes > 0:
+        try:
+            from firebase_admin import messaging  # Import nécessaire à la transmission réseau Google
+            
+            # 1. Écriture d'historique dans Firestore
+            db.collection("notifications").add({
+                "title": "🐷 Piggy Reward ! 🎁",
+                "body": "New free dice have just been added !",
+                "nom_du_jeu": "piggy_go",
+                "created_at": firestore.SERVER_TIMESTAMP
+            })
+            print("[Firebase] Enregistrement d'historique créé pour Piggy Go.")
+
+            # 2. PROPULSION DU SIGNAL DIRECT VERS LES APPAREILS ABONNÉS
+            message = messaging.Message(
+                notification=messaging.Notification(
+                    title="🐷 Piggy Reward ! 🎁",
+                    body="New free dice have just been added !"
+                ),
+                topic="piggy_go"  # Canal écouté par le futur interrupteur de vos paramètres
+            )
+            
+            response = messaging.send(message)
+            print(f"[Firebase Push] Notification Piggy Go propulsée avec succès ! (ID: {response})")
+            
+        except Exception as e:
+            print(f"[Firebase] [Erreur] Impossible d'envoyer l'alerte push direct : {e}")
             
 else:
     print(f"[Erreur] Échec d'accès réseau (Code {status_code}).")
