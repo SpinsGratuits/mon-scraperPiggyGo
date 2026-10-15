@@ -1,11 +1,20 @@
 [
     {
-        "date_scraping": "15/10/2026 @ 04:45",
-        "date_scraping1": "15/10/2026 @ 04:45",
+        "date_scraping": "15/10/2026 @ 10:47",
+        "date_scraping1": "15/10/2026 @ 10:47",
         "date": "15/10/2026",
-        "heure": "04:45",
+        "heure": "10:47",
         "recompense": "Dices et Rewards",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=MKOGKYNG&channel=1",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=48DBTUWF&channel=1",
+        "badge": "NEW"
+    },
+    {
+        "date_scraping": "15/10/2026 @ 10:47",
+        "date_scraping1": "15/10/2026 @ 10:47",
+        "date": "15/10/2026",
+        "heure": "10:47",
+        "recompense": "Dices et Rewards",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=48DBTUWF&channel=4",
         "badge": "NEW"
     },
     {
@@ -14,8 +23,17 @@
         "date": "15/10/2026",
         "heure": "04:45",
         "recompense": "Dices et Rewards",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=MKOGKYNG&channel=1",
+        "badge": ""
+    },
+    {
+        "date_scraping": "15/10/2026 @ 04:45",
+        "date_scraping1": "15/10/2026 @ 04:45",
+        "date": "15/10/2026",
+        "heure": "04:45",
+        "recompense": "Dices et Rewards",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=MKOGKYNG&channel=4",
-        "badge": "NEW"
+        "badge": ""
     },
     {
         "date_scraping": "13/10/2026 @ 13:41",
