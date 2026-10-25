@@ -1,8 +1,26 @@
 [
     {
+        "date_scraping": "25/10/2026 @ 04:43",
+        "date_scraping1": "25/10/2026 @ 04:43",
+        "date": "25/10/2026",
+        "heure": "04:43",
+        "recompense": "Dices et Rewards",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=OM3MEMFT&channel=1",
+        "badge": "NEW"
+    },
+    {
+        "date_scraping": "25/10/2026 @ 04:43",
+        "date_scraping1": "25/10/2026 @ 04:43",
+        "date": "25/10/2026",
+        "heure": "04:43",
+        "recompense": "Dices et Rewards",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=OM3MEMFT&channel=4",
+        "badge": "NEW"
+    },
+    {
         "date_scraping": "24/10/2026 @ 14:01",
         "date_scraping1": "24/10/2026 @ 14:01",
-        "date": "24/10/2026",
+        "date": "25/10/2026",
         "heure": "14:01",
         "recompense": "Dices et Rewards",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=5CZ43K4B&channel=1",
@@ -11,7 +29,7 @@
     {
         "date_scraping": "24/10/2026 @ 14:01",
         "date_scraping1": "24/10/2026 @ 14:01",
-        "date": "24/10/2026",
+        "date": "25/10/2026",
         "heure": "14:01",
         "recompense": "Dices et Rewards",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=5CZ43K4B&channel=4",
@@ -87,51 +105,6 @@
         "heure": "15:16",
         "recompense": "Dices et Rewards",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=TL0OJSDQ&channel=4",
-        "badge": ""
-    },
-    {
-        "date_scraping": "20/10/2026 @ 12:56",
-        "date_scraping1": "20/10/2026 @ 12:56",
-        "date": "20/10/2026",
-        "heure": "12:56",
-        "recompense": "Dices et Rewards",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=40CFHQ9P&channel=1",
-        "badge": ""
-    },
-    {
-        "date_scraping": "20/10/2026 @ 12:56",
-        "date_scraping1": "20/10/2026 @ 12:56",
-        "date": "20/10/2026",
-        "heure": "12:56",
-        "recompense": "Dices et Rewards",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=40CFHQ9P&channel=4",
-        "badge": ""
-    },
-    {
-        "date_scraping": "20/10/2026 @ 12:56",
-        "date_scraping1": "20/10/2026 @ 12:56",
-        "date": "20/10/2026",
-        "heure": "12:56",
-        "recompense": "Dices et Rewards",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=90CM7T24&channel=1",
-        "badge": ""
-    },
-    {
-        "date_scraping": "20/10/2026 @ 12:56",
-        "date_scraping1": "20/10/2026 @ 12:56",
-        "date": "20/10/2026",
-        "heure": "12:56",
-        "recompense": "Dices et Rewards",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=DX20V4NL&channel=1",
-        "badge": ""
-    },
-    {
-        "date_scraping": "20/10/2026 @ 12:56",
-        "date_scraping1": "20/10/2026 @ 12:56",
-        "date": "20/10/2026",
-        "heure": "12:56",
-        "recompense": "Dices et Rewards",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=DX20V4NL&channel=4",
         "badge": ""
     }
 ]
