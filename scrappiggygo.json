@@ -1,11 +1,38 @@
 [
     {
-        "date_scraping": "09/11/2026 @ 11:06",
-        "date_scraping1": "09/11/2026 @ 11:06",
+        "date_scraping": "09/11/2026 @ 17:06",
+        "date_scraping1": "09/11/2026 @ 17:06",
         "date": "09/11/2026",
-        "heure": "11:06",
+        "heure": "17:06",
         "recompense": "Dices et Rewards",
-        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=80WNSCZ8&channel=1",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=PHTQMCHK&channel=1",
+        "badge": "NEW"
+    },
+    {
+        "date_scraping": "09/11/2026 @ 17:06",
+        "date_scraping1": "09/11/2026 @ 17:06",
+        "date": "09/11/2026",
+        "heure": "17:06",
+        "recompense": "Dices et Rewards",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=PHTQMCHK&channel=4",
+        "badge": "NEW"
+    },
+    {
+        "date_scraping": "09/11/2026 @ 17:06",
+        "date_scraping1": "09/11/2026 @ 17:06",
+        "date": "09/11/2026",
+        "heure": "17:06",
+        "recompense": "Dices et Rewards",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=86FKLQ6F&channel=1",
+        "badge": "NEW"
+    },
+    {
+        "date_scraping": "09/11/2026 @ 17:06",
+        "date_scraping1": "09/11/2026 @ 17:06",
+        "date": "09/11/2026",
+        "heure": "17:06",
+        "recompense": "Dices et Rewards",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=86FKLQ6F&channel=4",
         "badge": "NEW"
     },
     {
@@ -14,8 +41,17 @@
         "date": "09/11/2026",
         "heure": "11:06",
         "recompense": "Dices et Rewards",
+        "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=80WNSCZ8&channel=1",
+        "badge": ""
+    },
+    {
+        "date_scraping": "09/11/2026 @ 11:06",
+        "date_scraping1": "09/11/2026 @ 11:06",
+        "date": "09/11/2026",
+        "heure": "11:06",
+        "recompense": "Dices et Rewards",
         "lienurl": "https://piggygo-jy.forevernine.com/fanpage?code=80WNSCZ8&channel=4",
-        "badge": "NEW"
+        "badge": ""
     },
     {
         "date_scraping": "08/11/2026 @ 11:06",
